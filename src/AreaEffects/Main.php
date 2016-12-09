@@ -24,7 +24,7 @@ class Main extends PluginBase implements Listener{
 		$this->saveDefaultConfig();
 		$this->getConfig()->reload();
 		$this->getServer()->getPluginManager()->registerEvents($this, $this);
-		$this->getLogger()->info(TextFormat::GREEN . "AreaEffects enabled!");
+		$this->getLogger()->info(TextFormat::GREEN . "AreaEffects включен!");
 	}
 
 	public function onCommand(CommandSender $sender, Command $command, $label, array $args){
@@ -37,7 +37,7 @@ class Main extends PluginBase implements Listener{
 							$pos1y = $sender->getFloorY();
 							$pos1z = $sender->getFloorZ();
 							$this->pos1 = new Vector3($pos1x, $pos1y, $pos1z);
-							$sender->sendMessage(TextFormat::GREEN . "[AreaEffects]Position 1 set as x:" . $pos1x . " y:" . $pos1y . " z:" . $pos1z);
+							$sender->sendMessage(TextFormat::GREEN . "[AreaEffects] 1-ая позицыя установлена на х:" . $pos1x . " y:" . $pos1y . " z:" . $pos1z);
 							return true;
 						}
 						break;
@@ -50,7 +50,7 @@ class Main extends PluginBase implements Listener{
 							$pos2y = $sender->getFloorY();
 							$pos2z = $sender->getFloorZ();
 							$this->pos2 = new Vector3($pos2x, $pos2y, $pos2z);
-							$sender->sendMessage(TextFormat::GREEN . "[AreaEffects]Position 2 set as x:" . $pos2x . " y:" . $pos2y . " z:" . $pos2z);
+							$sender->sendMessage(TextFormat::GREEN . "[AreaEffects]2-ая позицыя устаноена на x:" . $pos2x . " y:" . $pos2y . " z:" . $pos2z);
 							return true;
 						}
 						break;
@@ -65,21 +65,21 @@ class Main extends PluginBase implements Listener{
 										$this->getConfig()->setNested($args[1], array('level' => $sender->getLevel()->getName(),'pos1' => array('x' => $this->pos1->x,'y' => $this->pos1->y,'z' => $this->pos1->z),'pos2' => array('x' => $this->pos2->x,'y' => $this->pos2->y,'z' => $this->pos2->z),
 												'effect' => array('id' => $id,'duration' => ((isset($args[4]) && is_numeric($args[4]))?intval($args[4]):200),'amplifier' => ((isset($args[3]) && is_numeric($args[3]))?intval($args[3]):1),'show' => ((isset($args[5]) && is_bool($args[5]))?boolval($args[5]):false))));
 										$this->saveConfig();
-										$sender->sendMessage(TextFormat::GREEN . "[AreaEffects]Area created");
+										$sender->sendMessage(TextFormat::GREEN . "[AreaEffects] Площядь установлена");
 										return true;
 									}
 									else{
-										$sender->sendMessage(TextFormat::RED . "[AreaEffects]Invalid effect id or name given");
+										$sender->sendMessage(TextFormat::RED . "[AreaEffects]Не найдено ефеут ID укажите другое");
 										return false;
 									}
 								}
 							}
 							else{
-								$sender->sendMessage(TextFormat::RED . "[AreaEffects]Missing arguments");
+								$sender->sendMessage(TextFormat::RED . "[AreaEffects]Отсутствующие аргументы ");
 							}
 						}
 						else{
-							$sender->sendMessage(TextFormat::RED . "[AreaEffects]This command must be used in-game");
+							$sender->sendMessage(TextFormat::RED . "[AreaEffects]Используй эжту команду в игре");
 						}
 						break;
 					}
@@ -90,16 +90,16 @@ class Main extends PluginBase implements Listener{
 							$this->getConfig()->remove($args[1]);
 							$this->getConfig()->save();
 							if(!$this->getConfig()->exists($args[1])){
-								$sender->sendMessage(TextFormat::GREEN . "[AreaEffects]Area removed");
+								$sender->sendMessage(TextFormat::GREEN . "[AreaEffects] Площадь удалена");
 								return true;
 							}
 							else{
-								$sender->sendMessage(TextFormat::RED . "[AreaEffects]Area removal failed");
+								$sender->sendMessage(TextFormat::RED . "[AreaEffects]Ошибка удаления");
 								return true;
 							}
 						}
 						else{
-							$sender->sendMessage(TextFormat::RED . "[AreaEffects]Missing arguments, /ae remove <name>");
+							$sender->sendMessage(TextFormat::RED . "[AreaEffects] Не найдено аргументов используй: /ae remove <имя>");
 						}
 						break;
 					}
@@ -107,7 +107,7 @@ class Main extends PluginBase implements Listener{
 				case "list":
 					{
 						$all = array_keys($this->getConfig()->getAll());
-						$sender->sendMessage(TextFormat::GREEN . "[AreaEffects]Areas:\n" . TextFormat::GREEN . " - " . TextFormat::AQUA . implode("\n" . TextFormat::GREEN . " - " . TextFormat::AQUA, $all));
+						$sender->sendMessage(TextFormat::GREEN . "[AreaEffects]Площади:\n" . TextFormat::GREEN . " - " . TextFormat::AQUA . implode("\n" . TextFormat::GREEN . " - " . TextFormat::AQUA, $all));
 						return true;
 						break;
 					}
@@ -139,7 +139,7 @@ class Main extends PluginBase implements Listener{
 		if(($player->getLevel()->getName() == $area['level']) and ($player->getFloorX() <= max($area['pos1']['x'], $area['pos2']['x'])) and ($player->getFloorX() >= min($area['pos1']['x'], $area['pos2']['x'])) and ($player->getFloorY() <= max($area['pos1']['y'], $area['pos2']['y'])) and ($player->getFloorY() >= min($area['pos1']['y'], $area['pos2']['y'])) and ($player->getFloorZ() <= max($area['pos1']['z'], $area['pos2']['z'])) and ($player->getFloorZ() >= min($area['pos1']['z'], $area['pos2']['z']))){
 			if(is_null($this->isEffect($area['effect']['id']))){
 				$this->getConfig()->remove($areaname);
-				$message = TextFormat::YELLOW . "[AreaEffects]Invalid effect found, removed area " . TextFormat::GRAY . $areaname;
+				$message = TextFormat::YELLOW . "[AreaEffects]Ефект не найден удалена площадь" . TextFormat::GRAY . $areaname;
 				foreach($this->getServer()->getOps() as $opname){
 					$op = $this->getServer()->getPlayer($opname);
 					if($op instanceof Player && $op->isOnline()) $op->sendMessage($message);
